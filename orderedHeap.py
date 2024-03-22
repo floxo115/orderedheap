@@ -52,7 +52,6 @@ class OrderedHeap():
         elif child.next_idx == parent_pos:
             child.next_idx = child_pos
 
-
         # we update the previous/next indices of neighbors if they are
         # not the parent/child itself (i.e. not already changed in previous step)
         if parent.previous_idx >= 0 and parent.previous_idx != parent_pos:
@@ -71,15 +70,19 @@ class OrderedHeap():
 
         return parent_pos
 
-    def insert(self, previous_idx:int, value: float, data = None):
+    def insert(self, previous_idx: int, value: float, data=None):
+        # create the element to be inserted into the heap
         new_element = OrderedHeapElement(previous_idx, -1, value, data)
 
+        # the new element will be the last in the heap
         self.array.append(new_element)
 
+        # if there are already elements the last one that was inserted has to be set to be the neighbor
+        # of the new one
         if len(self) >= 1:
-            self.array[previous_idx].next_idx = len(self)-1
+            self.array[previous_idx].next_idx = len(self) - 1
 
-
+        # the new element has to bubble upwards as long as its parent element is smaller than it
         pos = len(self) - 1
         while pos != 0:
             parent_pos = OrderedHeap.get_parent(pos)
