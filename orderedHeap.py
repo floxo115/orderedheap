@@ -1,6 +1,29 @@
 from typing import List
 
 
+class OrderedHeapElement:
+    def __init__(self, previous_idx: int, next_idx: int, value: float, data: any = None):
+        self.previous_idx = previous_idx
+        self.next_idx = next_idx
+        self.value = value
+        self.data = data
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __le__(self, other):
+        return self.value <= other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
+    def __ge__(self, other):
+        return self.value >= other.value
+
+    def __repr__(self):
+        return f"<OrderedHeapElement [previous_idx: {self.previous_idx}, next_idx: {self.next_idx}, value: {self.value}]>"
+
+
 class OrderedHeap():
     def __init__(self):
         self.array: List[OrderedHeapElement] = []
@@ -79,7 +102,7 @@ class OrderedHeap():
 
         # if there are already elements the last one that was inserted has to be set to be the neighbor
         # of the new one
-        if len(self) >= 1:
+        if len(self) > 1:
             self.array[previous_idx].next_idx = len(self) - 1
 
         # the new element has to bubble upwards as long as its parent element is smaller than it
@@ -95,24 +118,15 @@ class OrderedHeap():
         return pos
 
 
-class OrderedHeapElement:
-    def __init__(self, previous_idx: int, next_idx: int, value: float, data: any = None):
-        self.previous_idx = previous_idx
-        self.next_idx = next_idx
-        self.value = value
-        self.data = data
+    def where_is_element(self, element: OrderedHeapElement):
+        """
+        helper to find the position of an element in the heap (could be done via saving it in the element itself...)
+        """
+        if element.previous_idx != -1:
+            return self.array[element.previous_idx].next_idx
+        elif element.next_idx != -1:
+            return self.array[element.next_idx].previous_idx
+        else:
+            return 0
 
-    def __lt__(self, other):
-        return self.value < other.value
 
-    def __le__(self, other):
-        return self.value <= other.value
-
-    def __gt__(self, other):
-        return self.value > other.value
-
-    def __ge__(self, other):
-        return self.value >= other.value
-
-    def __repr__(self):
-        return f"<OrderedHeapElement [previous_idx: {self.previous_idx}, next_idx: {self.next_idx}, value: {self.value}]>"
