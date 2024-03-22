@@ -117,7 +117,6 @@ class OrderedHeap():
 
         return pos
 
-
     def where_is_element(self, element: OrderedHeapElement):
         """
         helper to find the position of an element in the heap (could be done via saving it in the element itself...)
@@ -129,4 +128,46 @@ class OrderedHeap():
         else:
             return 0
 
+    def heapify(self, pos):
+        """
+        takes the position of an element in the heap and then bubbles up or down until it is in the correct position
+        helps to implement delete and is useful when values of elements in the heap are updated
+        """
 
+        def _bubble_up(pos):
+            # do nothing for the root element
+            if pos == 0:
+                return pos
+
+            # swap position with parent elment as long as it is smaller than elment at pos
+            parent_pos = OrderedHeap.get_parent(pos)
+            if self.array[parent_pos] < self.array[pos]:
+                self.swap_elements(pos)
+                # do the same thing recursively with new position
+                pos = _bubble_up(parent_pos)
+
+            return pos
+
+        def _bubble_down(pos):
+            left_child_pos = OrderedHeap.get_left_child(pos)
+
+            # do nothing for leaf elements
+            if left_child_pos >= len(self):
+                return pos
+
+            # if there are two children we want to find the position of the larger one
+            max_child_pos = left_child_pos
+            right_child_pos = left_child_pos + 1
+            if right_child_pos > len(self) and self.array[left_child_pos] < self.array[right_child_pos]:
+                max_child_pos = right_child_pos
+
+            # swap position if the larger child is larger than element at position
+            if self.array[max_child_pos] > self.array[pos]:
+                self.swap_elements(max_child_pos)
+                # do the same thing recursively with new position
+                pos = _bubble_down(max_child_pos)
+
+            return pos
+
+        pos = _bubble_up(pos)
+        return _bubble_down(pos)
