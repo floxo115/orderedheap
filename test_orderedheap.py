@@ -2,6 +2,8 @@ import pytest
 
 from orderedHeap import OrderedHeapElement, OrderedHeap
 
+import random
+
 
 def create_good_tree(num):
     heap = OrderedHeap()
@@ -111,3 +113,55 @@ def test_heapify(heap, change_index, change_value, expected):
     heap.heapify(change_index)
 
     assert print_heap_info(heap) == expected
+
+@pytest.mark.parametrize("heap, delete_idx, expected", [
+    [
+        create_good_tree(0), 1,
+        "[3, 1, 100][0, -1, 25][-1, 3, 50][2, 0, 0]"
+    ],
+    [
+        create_good_tree(0), 4,
+        "[2, 3, 100][-1, 2, 75][1, 0, 50][0, -1, 25]"
+    ],
+    [
+        create_good_tree(0), 3,
+        "[3, -1, 100][-1, 2, 75][1, 3, 50][2, 0, 0]"
+    ],
+    [
+        create_good_tree(2), 0,
+        "[2, 3, 75][3, -1, 25][-1, 0, 50][0, 1, 0]"
+    ],
+])
+def test_delete_element(heap, delete_idx, expected):
+    heap.delete_element(delete_idx)
+    assert print_heap_info(heap) == expected
+
+def test_delete_from_empty_heap():
+    heap = OrderedHeap()
+    with pytest.raises(Exception):
+        heap.delete_element(0)
+
+def test_delete_from_one_element_heap():
+    heap = OrderedHeap()
+    heap.insert(-1, 100)
+    heap.delete_element(0)
+    assert len(heap) == 0
+
+def test_delete_with_two_elements():
+    heap = OrderedHeap()
+    heap.insert(-1, 1)
+    heap.insert(0, 0)
+    heap.delete_element(0)
+
+def test_insert_delete_fuzzy():
+    random.seed(1024)
+    heap = OrderedHeap()
+    pos = -1
+    for i in range(5000):
+        pos = heap.insert(pos, random.random())
+
+    for i in range(5000):
+        heap.delete_element(random.randint(0, 4999 - i))
+
+    assert len(heap) == 0
+

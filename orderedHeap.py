@@ -171,3 +171,30 @@ class OrderedHeap():
 
         pos = _bubble_up(pos)
         return _bubble_down(pos)
+
+    def delete_element(self, pos):
+        assert 0 <= pos <= len(self) - 1
+
+        if len(self) == 0:
+            return
+
+        to_delete = self.array[pos]
+        last_el = self.array[-1]
+
+        if to_delete.previous_idx != -1:
+            self.array[to_delete.previous_idx].next_idx = to_delete.next_idx
+        if to_delete.next_idx != -1:
+            self.array[to_delete.next_idx].previous_idx = to_delete.previous_idx
+
+        self.array.pop()
+
+        if to_delete is last_el:
+            return
+
+        if last_el.previous_idx != -1:
+            self.array[last_el.previous_idx].next_idx = pos
+        if last_el.next_idx != -1:
+            self.array[last_el.next_idx].previous_idx = pos
+
+        self.array[pos] = last_el
+        self.heapify(pos)
