@@ -71,9 +71,13 @@ def test_swap_elements(heap, swap_index, expected):
 
 @pytest.mark.parametrize("inputs, expected", [
     [
-        [5,20,3,9,2,10],
+        [5, 20, 3, 9, 2, 10],
         "[3, 5, 20][5, 4, 9][4, -1, 10][-1, 0, 5][1, 2, 2][0, 1, 3]"
     ],
+    [
+        [5, 2, 3, 10, 1, 11, 12],
+        "[2, -1, 12][-1, 3, 5][4, 0, 11][1, 5, 2][6, 2, 1][3, 6, 3][5, 4, 10]"
+    ]
 ])
 def test_insert_into_empty_heap(inputs, expected):
     heap = OrderedHeap()
@@ -82,4 +86,3 @@ def test_insert_into_empty_heap(inputs, expected):
         pos = heap.insert(pos, inp)
 
     assert print_heap_info(heap) == expected
-
