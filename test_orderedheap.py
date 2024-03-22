@@ -86,3 +86,28 @@ def test_insert_into_empty_heap(inputs, expected):
         pos = heap.insert(pos, inp)
 
     assert print_heap_info(heap) == expected
+
+
+@pytest.mark.parametrize("heap, change_index, change_value, expected", [
+    [
+        create_good_tree(0), 4, 1000,
+        "[2, 1, 1000][0, 3, 100][4, 0, 50][1, -1, 25][-1, 2, 75]"
+    ],
+    [
+        create_good_tree(0), 4, 80,
+        "[1, 3, 100][2, 0, 80][4, 1, 50][0, -1, 25][-1, 2, 75]"
+    ],
+    [
+        create_good_tree(1), 0, 40,
+        "[1, 3, 75][-1, 0, 40][4, -1, 50][0, 4, 25][3, 2, 0]"
+    ],
+    [
+        create_good_tree(1), 0, 0,
+        "[3, 1, 75][0, 4, 25][4, -1, 50][-1, 0, 0][1, 2, 0]"
+    ],
+])
+def test_heapify(heap, change_index, change_value, expected):
+    heap.array[change_index].value = change_value
+    heap.heapify(change_index)
+
+    assert print_heap_info(heap) == expected
