@@ -13,6 +13,10 @@ class OrderedHeapElement:
         for i, val in enumerate(self.sort_values):
             if val < other.sort_values[i]:
                 return True
+            elif val == other.sort_values[i]:
+                continue
+            else:
+                break
 
         return False
 
@@ -20,6 +24,10 @@ class OrderedHeapElement:
         for i, val in enumerate(self.sort_values):
             if val > other.sort_values[i]:
                 return True
+            elif val == other.sort_values[i]:
+                continue
+            else:
+                break
 
         return False
 
