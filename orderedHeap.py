@@ -158,7 +158,7 @@ class OrderedHeap():
             # if there are two children we want to find the position of the larger one
             max_child_pos = left_child_pos
             right_child_pos = left_child_pos + 1
-            if right_child_pos > len(self) and self.array[left_child_pos] < self.array[right_child_pos]:
+            if right_child_pos < len(self) and self.array[left_child_pos] < self.array[right_child_pos]:
                 max_child_pos = right_child_pos
 
             # swap position if the larger child is larger than element at position

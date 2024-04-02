@@ -1,5 +1,6 @@
-import pytest
 import random
+
+import pytest
 
 from orderedheap_with_references import OrderedHeapElement, OrderedHeap
 
@@ -61,6 +62,7 @@ def print_heap_info(heap: OrderedHeap):
 
     return s
 
+
 def is_heap_sorted(heap: OrderedHeap):
     for i in range(len(heap)):
         if not heap.is_leaf(i):
@@ -75,7 +77,6 @@ def is_heap_sorted(heap: OrderedHeap):
                 return False
 
     return True
-
 
 
 def test_the_testtrees():
@@ -117,9 +118,10 @@ def test_heap_creation(inputs, expected):
     assert len(heap) == len(inputs)
     assert is_heap_sorted(heap)
 
+
 def test_heap_creation_fuzzy():
     heap = OrderedHeap()
-    for i in range(random.randint(100,100000)):
+    for i in range(random.randint(100, 100000)):
         heap.insert_element([random.random()])
 
     # test if the heap with random elements is a true heap
@@ -142,7 +144,3 @@ def test_heap_creation_fuzzy():
         jumps += 1
 
     assert jumps + 1 == len(heap)
-
-
-
-
