@@ -7,6 +7,7 @@ class OrderedHeapElement:
         self.next: OrderedHeapElement = None
         self.sort_values = sort_values
         self.data = data
+        self.pos = -1
 
     def __lt__(self, other):
         for i, val in enumerate(self.sort_values):
@@ -88,7 +89,23 @@ class OrderedHeap():
         parent_pos = OrderedHeap.get_parent(child_pos)
         self.array[child_pos], self.array[parent_pos] = self.array[parent_pos], self.array[child_pos]
 
+        self.array[parent_pos].pos = parent_pos
+        self.array[child_pos].pos = child_pos
         return child_pos
+
+    def bubble_up(self, pos):
+        # do nothing for the root element
+        if pos == 0:
+            return pos
+
+        # swap position with parent elment as long as it is smaller than elment at pos
+        parent_pos = OrderedHeap.get_parent(pos)
+        if self.array[parent_pos] < self.array[pos]:
+            self.swap_elements(pos)
+            # do the same thing recursively with new position
+            pos = self.bubble_up(parent_pos)
+
+        return pos
 
     def bubble_down(self, pos):
         # do nothing for leaf elements
@@ -113,6 +130,7 @@ class OrderedHeap():
         previous = self.last_inserted
 
         new_element = OrderedHeapElement(previous, sort_values, data=data)
+        new_element.pos = len(self)
         if self.first_inserted is None:
             self.first_inserted = new_element
 
@@ -126,3 +144,35 @@ class OrderedHeap():
         # TODO the first index can be tightened
         for pos in range(len(self), - 1, -1):
             self.bubble_down(pos)
+
+    def delete_max(self):
+        if len(self) == 0:
+            raise ValueError("The heap is already empty")
+
+        node_to_delete = self.array[0]
+
+        # fix the node references
+        node_prev = node_to_delete.previous
+        node_next = node_to_delete.next
+
+        if node_prev:
+            node_prev.next = node_to_delete.next
+        else:
+            self.first_inserted = node_next
+        if node_next:
+            node_next.previous = node_to_delete.previous
+        else:
+            self.last_inserted = node_prev
+
+        # put last element in array in first position and delete last position
+        self.array[0] = self.array[-1]
+        self.array[0].pos = 0
+        self.array.pop()
+
+        self.bubble_down(0)
+
+    def update_node(self, new_sort_values, pos):
+        self.array[pos].sort_values = new_sort_values
+        pos = self.bubble_up(pos)
+        pos = self.bubble_down(pos)
+
